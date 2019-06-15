@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">narsoe</string>
+    <string name="title_search">Search</string>
+    <string name="title_recent_calls">Recent calls</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="seacth_input">Phone Nnumber</string>
+</resources>
