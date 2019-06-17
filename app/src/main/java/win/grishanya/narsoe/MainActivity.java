@@ -1,8 +1,13 @@
 package win.grishanya.narsoe;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Button searchButton;
     private EditText phoneNumberEditText;
+    private BottomNavigationView navigation;
     private TextView mTextMessage;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -37,6 +43,14 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_dashboard:
                     //mTextMessage.setText(R.string.title_recent_calls);
+                    if (checkSelfPermission(android.Manifest.permission.READ_CALL_LOG)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        Intent intent = new Intent(MainActivity.this, RecentCallsActivity.class);
+                        startActivity(intent);
+                    } else {
+                        //запрашиваем разрешение
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_CALL_LOG}, 1);
+                    }
                     return true;
             }
             return false;
@@ -44,13 +58,20 @@ public class MainActivity extends AppCompatActivity {
     };
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        navigation.setSelectedItemId(R.id.navigation_home);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
        // mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.setSelectedItemId(R.id.navigation_home);
 
         //Search Button Handler
         searchButton = (Button) findViewById(R.id.searchButton);
@@ -62,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //
+        //EditText Add Mask
         phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText);
 
         MaskImpl mask = MaskImpl.createTerminated(PredefinedSlots.RUS_PHONE_NUMBER);
@@ -70,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
 
         final FormatWatcher formatWatcher = new MaskFormatWatcher(mask);
         formatWatcher.installOn(phoneNumberEditText);
+
+        //EditText setOnChangeListener
         formatWatcher.setCallback(new FormattedTextChangeListener() {
             @Override
             public boolean beforeFormatting(String oldValue, String newValue) {
@@ -89,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+
     }
 
     public String getIsValidPhonNumber(){

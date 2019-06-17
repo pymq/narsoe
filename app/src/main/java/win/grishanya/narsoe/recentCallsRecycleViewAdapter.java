@@ -1,0 +1,60 @@
+package win.grishanya.narsoe;
+
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+
+public class recentCallsRecycleViewAdapter extends RecyclerView.Adapter<recentCallsRecycleViewAdapter.recentCallsRecycleViewHolder> {
+    private ArrayList<String[]> listOfRecentCalls;
+
+    //Здесь описывается вьюха
+    public static class recentCallsRecycleViewHolder extends RecyclerView.ViewHolder{
+        TextView callerName;
+        TextView callerPhone;
+        TextView callDate;
+        ImageView callTypeIcon;
+
+        public recentCallsRecycleViewHolder(@NonNull View itemView) {
+            super(itemView);
+            callerName =  (TextView) itemView.findViewById(R.id.callerNameTextView);
+            callerPhone = (TextView) itemView.findViewById(R.id.phoneNumbertextView);
+            callDate = (TextView) itemView.findViewById(R.id.callDateTextView);
+            callTypeIcon  =(ImageView) itemView.findViewById(R.id.callTypeImageView);
+        }
+    }
+
+    //Конструктор
+    public recentCallsRecycleViewAdapter (ArrayList<String[]> listOfRecentCalls){
+        this.listOfRecentCalls = listOfRecentCalls;
+    }
+
+    //Назначили верстку
+    @NonNull
+    @Override
+    public recentCallsRecycleViewAdapter.recentCallsRecycleViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recent_calls_recycle_view_item,viewGroup,false);
+        recentCallsRecycleViewHolder myViewHolder = new recentCallsRecycleViewHolder (v);
+        return myViewHolder;
+    }
+
+    //Раскладываем данные по виджетам
+    @Override
+    public void onBindViewHolder(@NonNull recentCallsRecycleViewAdapter.recentCallsRecycleViewHolder recentCallsRecycleViewHolder, int i) {
+        String [] listOfRecentCalls = this.listOfRecentCalls.get(i);
+        recentCallsRecycleViewHolder.callerPhone.setText(listOfRecentCalls[3].toString());
+        recentCallsRecycleViewHolder.callerName.setText(listOfRecentCalls[4].toString());
+        recentCallsRecycleViewHolder.callerPhone.setText(listOfRecentCalls[2].toString());
+    }
+
+    @Override
+    public int getItemCount() {
+        return listOfRecentCalls.size();
+    }
+}
