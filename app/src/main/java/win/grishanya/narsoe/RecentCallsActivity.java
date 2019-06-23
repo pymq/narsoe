@@ -16,7 +16,10 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class RecentCallsActivity extends AppCompatActivity {
     private BottomNavigationView navigation;
@@ -76,28 +79,28 @@ public class RecentCallsActivity extends AppCompatActivity {
         Log.d("STH",""+recentCallsRecycleViewAdapter.getItemCount());
     }
 
-    public ArrayList<String[]> getListOfRecentCalls(){
-        ArrayList<String[]> result = new ArrayList<String[]>();
+    public ArrayList<Calls> getListOfRecentCalls(){
+        ArrayList<Calls> result = new ArrayList<Calls>();
         Cursor listOfRecentCalls = getContentResolver().query(
                 CallLog.Calls.CONTENT_URI,
                 listOfRecentCallsTables,
                 null,
                 null,
-                CallLog.Calls.DATE + " ASC"
+                CallLog.Calls.DATE + " DESC"
         );
         try {
             if (listOfRecentCalls.moveToFirst()) {
                 do {
-                    String _id = listOfRecentCalls.getString(listOfRecentCalls.getColumnIndex(CallLog.Calls._ID));
-                    String number = listOfRecentCalls.getString(listOfRecentCalls.getColumnIndex(CallLog.Calls.NUMBER));
-                    String date = listOfRecentCalls.getString(listOfRecentCalls.getColumnIndex(CallLog.Calls.DATE));
+                    Calls calls = new Calls();
+                    calls._id = listOfRecentCalls.getInt(listOfRecentCalls.getColumnIndex(CallLog.Calls._ID));
+                    calls.number = listOfRecentCalls.getString(listOfRecentCalls.getColumnIndex(CallLog.Calls.NUMBER));
+                    long timeStamp = listOfRecentCalls.getLong(listOfRecentCalls.getColumnIndex(CallLog.Calls.DATE));
+                    calls.date = new Date(timeStamp);
                     String name = listOfRecentCalls.getString(listOfRecentCalls.getColumnIndex(CallLog.Calls.CACHED_NAME));
-                    String duration = listOfRecentCalls.getString(listOfRecentCalls.getColumnIndex(CallLog.Calls.DURATION));
-                    String type = listOfRecentCalls.getString(listOfRecentCalls.getColumnIndex(CallLog.Calls.TYPE));
-                    String [] data = new String[]{
-                      _id,number,date,name,duration,type
-                    };
-                    result.add(data);
+                    calls.name = name == null ? "Unknown" : listOfRecentCalls.getString(listOfRecentCalls.getColumnIndex(CallLog.Calls.CACHED_NAME));
+                    calls.duration = listOfRecentCalls.getString(listOfRecentCalls.getColumnIndex(CallLog.Calls.DURATION));
+                    calls.type = listOfRecentCalls.getInt(listOfRecentCalls.getColumnIndex(CallLog.Calls.TYPE));
+                    result.add(calls);
                 } while (listOfRecentCalls.moveToNext());
             }
             if (!listOfRecentCalls.isClosed()) {

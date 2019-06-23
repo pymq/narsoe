@@ -8,10 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class recentCallsRecycleViewAdapter extends RecyclerView.Adapter<recentCallsRecycleViewAdapter.recentCallsRecycleViewHolder> {
-    private ArrayList<String[]> listOfRecentCalls;
+    private ArrayList<Calls> listOfRecentCalls;
 
     //Здесь описывается вьюха
     public static class recentCallsRecycleViewHolder extends RecyclerView.ViewHolder{
@@ -30,7 +32,7 @@ public class recentCallsRecycleViewAdapter extends RecyclerView.Adapter<recentCa
     }
 
     //Конструктор
-    public recentCallsRecycleViewAdapter (ArrayList<String[]> listOfRecentCalls){
+    public recentCallsRecycleViewAdapter (ArrayList<Calls> listOfRecentCalls){
         this.listOfRecentCalls = listOfRecentCalls;
     }
 
@@ -47,10 +49,12 @@ public class recentCallsRecycleViewAdapter extends RecyclerView.Adapter<recentCa
     //Раскладываем данные по виджетам
     @Override
     public void onBindViewHolder(@NonNull recentCallsRecycleViewAdapter.recentCallsRecycleViewHolder recentCallsRecycleViewHolder, int i) {
-        String [] listOfRecentCalls = this.listOfRecentCalls.get(i);
-        recentCallsRecycleViewHolder.callerPhone.setText(listOfRecentCalls[3].toString());
-        recentCallsRecycleViewHolder.callerName.setText(listOfRecentCalls[4].toString());
-        recentCallsRecycleViewHolder.callerPhone.setText(listOfRecentCalls[2].toString());
+        Calls calls = this.listOfRecentCalls.get(i);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd  HH:mm:ss ");
+        String date  = dateFormat.format( calls.date );
+        recentCallsRecycleViewHolder.callDate.setText(date);
+        recentCallsRecycleViewHolder.callerName.setText(calls.name.toString());
+        recentCallsRecycleViewHolder.callerPhone.setText(calls.number.toString());
     }
 
     @Override
