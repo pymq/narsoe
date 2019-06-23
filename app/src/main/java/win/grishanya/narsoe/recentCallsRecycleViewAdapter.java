@@ -12,6 +12,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static android.provider.CallLog.Calls.INCOMING_TYPE;
+import static android.provider.CallLog.Calls.MISSED_TYPE;
+import static android.provider.CallLog.Calls.OUTGOING_TYPE;
+
 public class recentCallsRecycleViewAdapter extends RecyclerView.Adapter<recentCallsRecycleViewAdapter.recentCallsRecycleViewHolder> {
     private ArrayList<Calls> listOfRecentCalls;
 
@@ -55,6 +59,20 @@ public class recentCallsRecycleViewAdapter extends RecyclerView.Adapter<recentCa
         recentCallsRecycleViewHolder.callDate.setText(date);
         recentCallsRecycleViewHolder.callerName.setText(calls.name.toString());
         recentCallsRecycleViewHolder.callerPhone.setText(calls.number.toString());
+        switch (calls.type){
+            case INCOMING_TYPE :{
+                recentCallsRecycleViewHolder.callTypeIcon.setImageResource(android.R.drawable.sym_call_incoming);
+            }
+            case MISSED_TYPE :{
+                recentCallsRecycleViewHolder.callTypeIcon.setImageResource(android.R.drawable.sym_call_missed);
+            }
+            case OUTGOING_TYPE :{
+                recentCallsRecycleViewHolder.callTypeIcon.setImageResource(android.R.drawable.sym_call_outgoing);
+            }
+            default:{
+                recentCallsRecycleViewHolder.callTypeIcon.setImageResource(android.R.drawable.sym_action_call);
+            }
+        }
     }
 
     @Override
