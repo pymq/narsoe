@@ -62,15 +62,19 @@ public class recentCallsRecycleViewAdapter extends RecyclerView.Adapter<recentCa
         switch (calls.type){
             case INCOMING_TYPE :{
                 recentCallsRecycleViewHolder.callTypeIcon.setImageResource(android.R.drawable.sym_call_incoming);
+                break;
             }
             case MISSED_TYPE :{
                 recentCallsRecycleViewHolder.callTypeIcon.setImageResource(android.R.drawable.sym_call_missed);
+                break;
             }
             case OUTGOING_TYPE :{
                 recentCallsRecycleViewHolder.callTypeIcon.setImageResource(android.R.drawable.sym_call_outgoing);
+                break;
             }
             default:{
                 recentCallsRecycleViewHolder.callTypeIcon.setImageResource(android.R.drawable.sym_action_call);
+                break;
             }
         }
     }

@@ -23,6 +23,8 @@ import java.util.Date;
 
 public class RecentCallsActivity extends AppCompatActivity {
     private BottomNavigationView navigation;
+    private ArrayList<Calls> recentCallsList;
+    private RecyclerView.Adapter recentCallsRecycleViewAdapter;
     public String [] listOfRecentCallsTables = new String []{
             CallLog.Calls._ID,
             CallLog.Calls.DATE,
@@ -40,11 +42,11 @@ public class RecentCallsActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_dashboard:
-//                    Intent intent = new Intent(RecentCallsActivity.this, MainActivity.class);
-//                    startActivity(intent);
                     //mTextMessage.setText(R.string.title_recent_calls);
                     return true;
                 case R.id.navigation_home:
+                    Intent intent = new Intent(RecentCallsActivity.this, MainActivity.class);
+                    startActivity(intent);
                     //mTextMessage.setText(R.string.title_search);
                     return true;
             }
@@ -55,8 +57,14 @@ public class RecentCallsActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
         navigation.setSelectedItemId(R.id.navigation_dashboard);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateListOfRecentCalls();
+        recentCallsRecycleViewAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -65,16 +73,17 @@ public class RecentCallsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recent_calls);
 
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_dashboard);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         recentCalls = (RecyclerView) findViewById(R.id.recentCallsRecyclerView);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recentCalls.setLayoutManager(layoutManager);
 
-        // specify an adapter (see also next example)
-        RecyclerView.Adapter recentCallsRecycleViewAdapter = new recentCallsRecycleViewAdapter(getListOfRecentCalls());
+        //ToDO Получается что сазу полсе этого запускается onResume, который повторно вносит данные. Надо фиксить
+        this.recentCallsList = getListOfRecentCalls();
+        recentCallsRecycleViewAdapter = new recentCallsRecycleViewAdapter(recentCallsList);
         recentCalls.setAdapter(recentCallsRecycleViewAdapter);
         Log.d("STH",""+recentCallsRecycleViewAdapter.getItemCount());
     }
@@ -110,6 +119,11 @@ public class RecentCallsActivity extends AppCompatActivity {
             Log.d("exception","NullPointerExceptionDB");
         }
         return result;
+    }
+
+    public void updateListOfRecentCalls(){
+        this.recentCallsList.clear();
+        this.recentCallsList.addAll(getListOfRecentCalls());
     }
 }
 
