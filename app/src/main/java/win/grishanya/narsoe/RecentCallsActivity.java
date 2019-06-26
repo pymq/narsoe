@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import java.text.SimpleDateFormat;
@@ -124,6 +125,23 @@ public class RecentCallsActivity extends AppCompatActivity {
     public void updateListOfRecentCalls(){
         this.recentCallsList.clear();
         this.recentCallsList.addAll(getListOfRecentCalls());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.settings,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings_settings:
+                Intent intent = new Intent(RecentCallsActivity.this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
 

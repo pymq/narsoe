@@ -2,7 +2,11 @@
     <string name="app_name">narsoe</string>
     <string name="title_search">Search</string>
     <string name="title_recent_calls">Recent calls</string>
+    <string name="title_settings">Settings</string>
     <string name="title_notifications">Notifications</string>
     <string name="seacth_input_hint">Phone Number</string>
     <string name="button_search_label">Search</string>
+    <string name="setting_switch_define_incoming_call">Define incoming call</string>
+    <string name="setting_switch_show_modal_window">Show modal window upper than other</string>
+    <string name="setting_plain_text_hint">ADD_SOME_DOMAIN_INFO</string>
 </resources>
