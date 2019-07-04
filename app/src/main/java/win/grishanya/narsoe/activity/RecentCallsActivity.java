@@ -89,6 +89,7 @@ public class RecentCallsActivity extends AppCompatActivity {
         Log.d("STH",""+recentCallsRecycleViewAdapter.getItemCount());
     }
 
+    //Метод отдает список всех звонков
     public ArrayList<Calls> getListOfRecentCalls(){
         ArrayList<Calls> result = new ArrayList<Calls>();
         Cursor listOfRecentCalls = getContentResolver().query(
@@ -122,6 +123,7 @@ public class RecentCallsActivity extends AppCompatActivity {
         return result;
     }
 
+    //Метод обновляет RecycleView
     public void updateListOfRecentCalls(){
         this.recentCallsList.clear();
         this.recentCallsList.addAll(getListOfRecentCalls());

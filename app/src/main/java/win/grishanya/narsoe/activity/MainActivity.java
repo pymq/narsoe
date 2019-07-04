@@ -3,7 +3,9 @@ package win.grishanya.narsoe;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -132,7 +134,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        checkPermissions();
+        //checkDrawOverlayPermission();
     }
 
     public String getIsValidPhonNumber(){
@@ -143,4 +146,33 @@ public class MainActivity extends AppCompatActivity {
 
         return userPhoneNumber;
     }
+
+    public void checkPermissions(){
+        if (checkSelfPermission(android.Manifest.permission.READ_PHONE_STATE)
+                == PackageManager.PERMISSION_GRANTED) {
+                //ToDO Добавить какое-нибудь сообщение
+        } else {
+            //запрашиваем разрешение
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
+        }
+            //ToDO Возможно для этого не надо. Чекнуть!
+        if (checkSelfPermission(android.Manifest.permission.SYSTEM_ALERT_WINDOW)
+                == PackageManager.PERMISSION_GRANTED) {
+            //ToDO Добавить какое-нибудь сообщение
+        } else {
+            //запрашиваем разрешение
+            checkDrawOverlayPermission();
+        }
+    }
+    public void checkDrawOverlayPermission() {
+        /** check if we already  have permission to draw over other apps */
+        //if (!Settings.canDrawOverlays(Context)) {
+            /** if not construct intent to request permission */
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            /** request permission via start activity for result */
+            startActivity(intent);
+        //}
+    }
 }
+
