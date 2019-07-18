@@ -1,8 +1,10 @@
 package win.grishanya.narsoe;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.preference.PreferenceManager;
@@ -26,7 +28,10 @@ import win.grishanya.narsoe.network.GetShortInformation;
 import win.grishanya.narsoe.network.RetrofitInstance;
 
 public class CallReceiver extends BroadcastReceiver {
-    private Boolean incomingCall = false;
+    private static Boolean incomingCall = false;
+    private static WindowManager windowManager;
+    private static ViewGroup windowLayout;
+
     @Override
     public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -48,11 +53,11 @@ public class CallReceiver extends BroadcastReceiver {
                     } else if (phoneState.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
                         //Телефон находится в режиме звонка (набор номера при исходящем звонке / разговор)
                         Log.i("info", "EXTRA_STATE_OFFHOOK");
-                        if (incomingCall) {
-                            Log.d("info", "Close window.");
-                            incomingCall = false;
-                            closeWindow();
-                        }
+//                        if (incomingCall) {
+//                            Log.d("info", "Close window.");
+//                            incomingCall = false;
+//                            closeWindow();
+//                        }
                     } else if (phoneState.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
                         //Телефон находится в ждущем режиме - это событие наступает по окончанию разговора
                         //или в ситуации "отказался поднимать трубку и сбросил звонок".
@@ -67,12 +72,7 @@ public class CallReceiver extends BroadcastReceiver {
             }
         }
 
-    private static WindowManager windowManager;
-    private ViewGroup windowLayout;
-
-    public void showWindow(Context context, String phone, int modalWindowPosition) {
-
-
+    public void showWindow(final Context context, String phone, int modalWindowPosition) {
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         //ToDO добавить TYPE_SYSTEM_ALERT для api 23
@@ -83,11 +83,13 @@ public class CallReceiver extends BroadcastReceiver {
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
                 PixelFormat.TRANSLUCENT);
         //Если добавить  | WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY | WindowManager.LayoutParams. TYPE_APPLICATION_OVERLAY отображаетс на весь экран
+
+        //Верстка
         params.gravity = Gravity.TOP;
         params.y = modalWindowPosition;
-        Log.i("modalWindowPosition", Integer.toString(modalWindowPosition));
         windowLayout = (ViewGroup) layoutInflater.inflate(R.layout.call_info, null);
         windowLayout.setBackgroundResource(R.color.colorBackGroundInfo);
+        windowLayout.setId(View.generateViewId());
         TextView textViewNumber=(TextView) windowLayout.findViewById(R.id.textViewNumber);
         Button buttonClose=(Button) windowLayout.findViewById(R.id.buttonClose);
         showNumberInfo(phone,windowLayout);
@@ -103,9 +105,9 @@ public class CallReceiver extends BroadcastReceiver {
     }
 
     public void closeWindow() {
-        if (windowLayout !=null){
+        if (windowLayout != null){
             windowManager.removeView(windowLayout);
-            windowLayout =null;
+            windowLayout = null;
         }
     }
 
@@ -136,3 +138,9 @@ public class CallReceiver extends BroadcastReceiver {
     }
 
 }
+
+/*
+КОроче,  опишу два решения, чтобы не забыть.
+1) Регаем ресивер в самом окне, если получится. Пусть сам ловит и закрывается BroadcastReceiver components are not allowed to register to receive intents
+2) Сохраняем в ресурсы ID вьюхи
+*/

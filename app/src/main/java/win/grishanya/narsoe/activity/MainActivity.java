@@ -1,4 +1,4 @@
-package win.grishanya.narsoe;
+package win.grishanya.narsoe.activity;
 
 import android.Manifest;
 import android.content.Intent;
@@ -9,11 +9,8 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,12 +19,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import ru.tinkoff.decoro.FormattedTextChangeListener;
-import ru.tinkoff.decoro.Mask;
 import ru.tinkoff.decoro.MaskImpl;
 import ru.tinkoff.decoro.slots.PredefinedSlots;
 import ru.tinkoff.decoro.watchers.FormatWatcher;
 import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
+import win.grishanya.narsoe.InfoListShort;
+import win.grishanya.narsoe.R;
+import win.grishanya.narsoe.network.GetShortInformation;
+import win.grishanya.narsoe.network.RetrofitInstance;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -99,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast toast = Toast.makeText(getApplicationContext(),getIsValidPhonNumber(),Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getApplicationContext(),getIsValidPhoneNumber(),Toast.LENGTH_LONG);
                 toast.show();
             }
         });
@@ -136,9 +139,10 @@ public class MainActivity extends AppCompatActivity {
 
         checkPermissions();
         //checkDrawOverlayPermission();
+
     }
 
-    public String getIsValidPhonNumber(){
+    public String getIsValidPhoneNumber(){
         //ToDO дописать :3
         boolean result = false;
 
@@ -166,13 +170,13 @@ public class MainActivity extends AppCompatActivity {
     }
     public void checkDrawOverlayPermission() {
         /** check if we already  have permission to draw over other apps */
-        //if (!Settings.canDrawOverlays(Context)) {
+        if (!Settings.canDrawOverlays(this)) {
             /** if not construct intent to request permission */
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                     Uri.parse("package:" + getPackageName()));
             /** request permission via start activity for result */
             startActivity(intent);
-        //}
+        }
     }
 }
 

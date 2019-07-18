@@ -1,15 +1,12 @@
-package win.grishanya.narsoe;
+package win.grishanya.narsoe.activity;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.CallLog;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,10 +14,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+
+import win.grishanya.narsoe.Calls;
+import win.grishanya.narsoe.R;
+import win.grishanya.narsoe.recentCallsRecycleViewAdapter;
 
 public class RecentCallsActivity extends AppCompatActivity {
     private BottomNavigationView navigation;
