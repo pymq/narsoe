@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast toast = Toast.makeText(getApplicationContext(),getIsValidPhoneNumber(),Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getApplicationContext(),getIsValidPhonNumber(),Toast.LENGTH_LONG);
                 toast.show();
             }
         });
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public String getIsValidPhoneNumber(){
+    public String getIsValidPhonNumber(){
         //ToDO дописать :3
         boolean result = false;
 

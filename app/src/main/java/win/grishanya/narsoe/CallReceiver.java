@@ -19,6 +19,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -92,7 +94,6 @@ public class CallReceiver extends BroadcastReceiver {
         windowLayout.setId(View.generateViewId());
         TextView textViewNumber=(TextView) windowLayout.findViewById(R.id.textViewNumber);
         Button buttonClose=(Button) windowLayout.findViewById(R.id.buttonClose);
-        showNumberInfo(phone,windowLayout);
         textViewNumber.setText(phone);
         buttonClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +101,7 @@ public class CallReceiver extends BroadcastReceiver {
                 closeWindow();
             }
         });
+        showNumberInfo(phone,windowLayout);
 
         windowManager.addView(windowLayout, params);
     }
@@ -123,9 +125,22 @@ public class CallReceiver extends BroadcastReceiver {
         call.enqueue(new Callback<InfoListShort>() {
             @Override
             public void onResponse(Call<InfoListShort> call, Response<InfoListShort> response) {
-                Log.i("Request","GoodRequest");
-                informationTextView.setText("Company name " +response.body().getCompany().getName()+"\n"+"Rating " + response.body().getRating()
-                        + "\n"+"Type " + response.body().getType());
+                Log.i("Request","GoodRequest"+response.code());
+                String result ="";
+                if(response.body().getCompany() != null) {
+                    result +=
+                            "Company name " + response.body().getCompany().getName() + "\n"+
+                            "Company descr " + response.body().getCompany().getDescription() + "\n";
+                }
+                result +=
+                        "Name " + response.body().getName()  + "\n"+
+                        "Badge " + response.body().getBadge()  + "\n"+
+                        "Rating " + response.body().getRating() + "\n"+
+                        "Type " + response.body().getType();
+                if(!response.body().getComments().isEmpty()){
+                    result += "\n" + "Comment " + response.body().getComments().get(0);
+                }
+                informationTextView.setText(result);
         }
 
             @Override
