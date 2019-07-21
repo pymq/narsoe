@@ -101,8 +101,21 @@ public class CallReceiver extends BroadcastReceiver {
                 closeWindow();
             }
         });
-        showNumberInfo(phone,windowLayout);
 
+        final TextView informationTextView = (TextView) windowLayout.findViewById(R.id.informationTextView);
+        NetworkRequests networkRequests = new NetworkRequests();
+        NetworkRequests.NumberInfoCallbacks numberInfoCallbacks = new NetworkRequests.NumberInfoCallbacks() {
+            @Override
+            public void onGetNumberInfo(String result) {
+                informationTextView.setText(result);
+            }
+
+            @Override
+            public void onGetNumberInfoFailed(Throwable error) {
+                informationTextView.setText(R.string.bad_request);
+            }
+        };
+        networkRequests.getNumberInfo(phone,numberInfoCallbacks);
         windowManager.addView(windowLayout, params);
     }
 
@@ -113,49 +126,4 @@ public class CallReceiver extends BroadcastReceiver {
         }
     }
 
-    public void showNumberInfo(String number,ViewGroup windowLayout) {
-        final TextView informationTextView = (TextView) windowLayout.findViewById(R.id.informationTextView);
-        String result;
-        GetShortInformation service = RetrofitInstance.getRetrofitInstance().create(GetShortInformation.class);
-
-        /*Call the method with parameter in the interface to get the employee data*/
-        Call<InfoListShort> call = service.getData(number);
-
-
-        call.enqueue(new Callback<InfoListShort>() {
-            @Override
-            public void onResponse(Call<InfoListShort> call, Response<InfoListShort> response) {
-                Log.i("Request","GoodRequest"+response.code());
-                String result ="";
-                if(response.body().getCompany() != null) {
-                    result +=
-                            "Company name " + response.body().getCompany().getName() + "\n"+
-                            "Company descr " + response.body().getCompany().getDescription() + "\n";
-                }
-                result +=
-                        "Name " + response.body().getName()  + "\n"+
-                        "Badge " + response.body().getBadge()  + "\n"+
-                        "Rating " + response.body().getRating() + "\n"+
-                        "Type " + response.body().getType();
-                if(!response.body().getComments().isEmpty()){
-                    result += "\n" + "Comment " + response.body().getComments().get(0);
-                }
-                informationTextView.setText(result);
-        }
-
-            @Override
-            public void onFailure(Call<InfoListShort> call, Throwable t) {
-
-                informationTextView.setText(R.string.bad_request);
-
-            }
-        });
-    }
-
 }
-
-/*
-КОроче,  опишу два решения, чтобы не забыть.
-1) Регаем ресивер в самом окне, если получится. Пусть сам ловит и закрывается BroadcastReceiver components are not allowed to register to receive intents
-2) Сохраняем в ресурсы ID вьюхи
-*/

@@ -1,5 +1,10 @@
 package win.grishanya.narsoe.activity;
 
+import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -8,24 +13,30 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
 
 import win.grishanya.narsoe.Calls;
+import win.grishanya.narsoe.NetworkRequests;
 import win.grishanya.narsoe.R;
-import win.grishanya.narsoe.recentCallsRecycleViewAdapter;
+import win.grishanya.narsoe.RecyclerViewClickListener;
+import win.grishanya.narsoe.RecentCallsRecycleViewAdapter;
 
 public class RecentCallsActivity extends AppCompatActivity {
     private BottomNavigationView navigation;
     private ArrayList<Calls> recentCallsList;
-    private RecyclerView.Adapter recentCallsRecycleViewAdapter;
-    public String [] listOfRecentCallsTables = new String []{
+    private RecentCallsRecycleViewAdapter recentCallsRecycleViewAdapter;
+    private String [] listOfRecentCallsTables = new String []{
             CallLog.Calls._ID,
             CallLog.Calls.DATE,
             CallLog.Calls.NUMBER,
@@ -35,6 +46,7 @@ public class RecentCallsActivity extends AppCompatActivity {
     };
     private RecyclerView recentCalls;
 
+    //Navigation
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -54,6 +66,7 @@ public class RecentCallsActivity extends AppCompatActivity {
         }
     };
 
+    //Activity Methods
     @Override
     protected void onPause() {
         super.onPause();
@@ -73,19 +86,38 @@ public class RecentCallsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recent_calls);
 
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        recentCalls = (RecyclerView) findViewById(R.id.recentCallsRecyclerView);
+
         navigation.setSelectedItemId(R.id.navigation_dashboard);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        recentCalls = (RecyclerView) findViewById(R.id.recentCallsRecyclerView);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recentCalls.setLayoutManager(layoutManager);
+
+        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recentCalls.getContext(),
+                 layoutManager.getOrientation());
+        recentCalls.addItemDecoration(mDividerItemDecoration);
 
         //ToDO Получается что сазу полсе этого запускается onResume, который повторно вносит данные. Надо фиксить
         this.recentCallsList = getListOfRecentCalls();
-        recentCallsRecycleViewAdapter = new recentCallsRecycleViewAdapter(recentCallsList);
+        recentCallsRecycleViewAdapter = new RecentCallsRecycleViewAdapter(recentCallsList, new RecentCallsRecycleViewAdapter.ItemClickListener() {
+            @Override
+            public void onItemLongClick(String number) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("", number);
+                clipboard.setPrimaryClip(clip);
+                Toast toast = Toast.makeText(getApplicationContext(), "Debug: Номер скопирован", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+
+            @Override
+            public void onItemClick(String number) {
+                showPhoneNumberInformation(number);
+            }
+        });
         recentCalls.setAdapter(recentCallsRecycleViewAdapter);
-        Log.d("STH",""+recentCallsRecycleViewAdapter.getItemCount());
     }
 
     //Метод отдает список всех звонков
@@ -128,6 +160,7 @@ public class RecentCallsActivity extends AppCompatActivity {
         this.recentCallsList.addAll(getListOfRecentCalls());
     }
 
+    //Menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.settings,menu);
@@ -143,6 +176,32 @@ public class RecentCallsActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showPhoneNumberInformation(final String phone){
+        NetworkRequests networkRequests = new NetworkRequests();
+        NetworkRequests.NumberInfoCallbacks numberInfoCallbacks = new NetworkRequests.NumberInfoCallbacks() {
+            @Override
+            public void onGetNumberInfo(String result) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(RecentCallsActivity.this);
+                builder.setTitle("Info " + phone)
+                        .setMessage(result)
+                        .setNegativeButton("Close",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+
+            @Override
+            public void onGetNumberInfoFailed(Throwable error) {
+
+            }
+        };
+        networkRequests.getNumberInfo(phone,numberInfoCallbacks);
     }
 }
 
