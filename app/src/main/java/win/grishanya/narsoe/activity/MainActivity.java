@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     private Button searchButton;
     private EditText phoneNumberEditText;
     private BottomNavigationView navigation;
-    private TextView phoneNumberGeneralInfoTextView;
 
     //Navigation view
 
@@ -82,10 +81,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       // mTextMessage = (TextView) findViewById(R.id.message);
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText);
-        phoneNumberGeneralInfoTextView = (TextView) findViewById(R.id.phoneNumberGeneralInfoTextView);
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_home);
@@ -94,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         mask.setShowingEmptySlots(true);
         final FormatWatcher formatWatcher = new MaskFormatWatcher(mask);
         formatWatcher.installOn(phoneNumberEditText);
-        //EditText setOnChangeListener
+
         formatWatcher.setCallback(new FormattedTextChangeListener() {
             @Override
             public boolean beforeFormatting(String oldValue, String newValue) {
@@ -110,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
                     searchButton.setEnabled(true);
                 }else{
                     searchButton.setEnabled(false);
-                    phoneNumberGeneralInfoTextView.setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -120,20 +116,9 @@ public class MainActivity extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NetworkRequests networkRequests = new NetworkRequests();
-                NetworkRequests.NumberInfoCallbacks numberInfoCallbacks = new NetworkRequests.NumberInfoCallbacks() {
-                    @Override
-                    public void onGetNumberInfo(String result) {
-                        phoneNumberGeneralInfoTextView.setText(result);
-                        phoneNumberGeneralInfoTextView.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onGetNumberInfoFailed(Throwable error) {
-
-                    }
-                };
-                networkRequests.getNumberInfo(formatWatcher.getMask().toUnformattedString().replace("_",""),numberInfoCallbacks);
+                Intent intent = new Intent(MainActivity.this, NumberInfoActivity.class);
+                intent.putExtra("phoneNumber",formatWatcher.getMask().toUnformattedString().replace("_",""));
+                startActivity(intent);
             }
         });
 

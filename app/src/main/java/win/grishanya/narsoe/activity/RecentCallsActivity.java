@@ -13,14 +13,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -29,7 +27,6 @@ import java.util.Date;
 import win.grishanya.narsoe.Calls;
 import win.grishanya.narsoe.NetworkRequests;
 import win.grishanya.narsoe.R;
-import win.grishanya.narsoe.RecyclerViewClickListener;
 import win.grishanya.narsoe.RecentCallsRecycleViewAdapter;
 
 public class RecentCallsActivity extends AppCompatActivity {
@@ -114,7 +111,9 @@ public class RecentCallsActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(String number) {
-                showPhoneNumberInformation(number);
+                Intent intent = new Intent(RecentCallsActivity.this, NumberInfoActivity.class);
+                intent.putExtra("phoneNumber",number);
+                startActivity(intent);
             }
         });
         recentCalls.setAdapter(recentCallsRecycleViewAdapter);
@@ -176,32 +175,6 @@ public class RecentCallsActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void showPhoneNumberInformation(final String phone){
-        NetworkRequests networkRequests = new NetworkRequests();
-        NetworkRequests.NumberInfoCallbacks numberInfoCallbacks = new NetworkRequests.NumberInfoCallbacks() {
-            @Override
-            public void onGetNumberInfo(String result) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(RecentCallsActivity.this);
-                builder.setTitle("Info " + phone)
-                        .setMessage(result)
-                        .setNegativeButton("Close",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                    }
-                                });
-                AlertDialog alert = builder.create();
-                alert.show();
-            }
-
-            @Override
-            public void onGetNumberInfoFailed(Throwable error) {
-
-            }
-        };
-        networkRequests.getNumberInfo(phone,numberInfoCallbacks);
     }
 }
 

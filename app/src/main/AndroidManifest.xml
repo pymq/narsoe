@@ -24,8 +24,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".activity.RecentCallsActivity"></activity>
         <activity android:name=".activity.SettingsActivity"></activity>
+        <activity android:name=".activity.NumberInfoActivity"></activity>
 
         <receiver android:name=".CallReceiver">
             <intent-filter>

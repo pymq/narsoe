@@ -103,8 +103,8 @@ public class CallReceiver extends BroadcastReceiver {
         });
 
         final TextView informationTextView = (TextView) windowLayout.findViewById(R.id.informationTextView);
-        NetworkRequests networkRequests = new NetworkRequests();
-        NetworkRequests.NumberInfoCallbacks numberInfoCallbacks = new NetworkRequests.NumberInfoCallbacks() {
+        ResponseDataHandler responseDataHandler = new ResponseDataHandler();
+        ResponseDataHandler.NumberInfoCallbacks numberInfoCallbacks = new ResponseDataHandler.NumberInfoCallbacks() {
             @Override
             public void onGetNumberInfo(String result) {
                 informationTextView.setText(result);
@@ -115,7 +115,7 @@ public class CallReceiver extends BroadcastReceiver {
                 informationTextView.setText(R.string.bad_request);
             }
         };
-        networkRequests.getNumberInfo(phone,numberInfoCallbacks);
+        responseDataHandler.getNumberInfo(phone,numberInfoCallbacks);
         windowManager.addView(windowLayout, params);
     }
 
