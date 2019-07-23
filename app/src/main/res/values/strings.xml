@@ -11,6 +11,7 @@
     <string name="setting_plain_text_hint">ADD_SOME_DOMAIN_INFO</string>
     <string name="info_caller_phone">Phone number</string>
     <string name="info_block_info_header">Some information</string>
-    <string name="bad_request">Oooh... Something went wrong</string>
+    <string name="bad_request">Oooh… Something went wrong</string>
     <string name="setting_modal_window_position">Modal window position</string>
+    <string name="recentCallsActivityNumberCopied">Number copied</string>
 </resources>

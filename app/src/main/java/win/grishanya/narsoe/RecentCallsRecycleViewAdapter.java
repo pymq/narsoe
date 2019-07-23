@@ -108,6 +108,12 @@ public class RecentCallsRecycleViewAdapter  extends RecyclerView.Adapter<RecentC
         return listOfRecentCalls.size();
     }
 
+    public void updateListOfRecentCalls(ArrayList<Calls> calls){
+        listOfRecentCalls.clear();
+        listOfRecentCalls = calls;
+        notifyDataSetChanged();
+    }
+
     private Calls getCall (int position){
         return listOfRecentCalls.get(position);
     }

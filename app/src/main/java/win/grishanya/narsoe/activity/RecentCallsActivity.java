@@ -73,9 +73,9 @@ public class RecentCallsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateListOfRecentCalls();
-        recentCallsRecycleViewAdapter.notifyDataSetChanged();
+        recentCallsRecycleViewAdapter.updateListOfRecentCalls(getListOfRecentCalls());
     }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,8 +87,6 @@ public class RecentCallsActivity extends AppCompatActivity {
 
         navigation.setSelectedItemId(R.id.navigation_dashboard);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recentCalls.setLayoutManager(layoutManager);
@@ -105,7 +103,7 @@ public class RecentCallsActivity extends AppCompatActivity {
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("", number);
                 clipboard.setPrimaryClip(clip);
-                Toast toast = Toast.makeText(getApplicationContext(), "Debug: Номер скопирован", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.recentCallsActivityNumberCopied), Toast.LENGTH_SHORT);
                 toast.show();
             }
 
@@ -151,12 +149,6 @@ public class RecentCallsActivity extends AppCompatActivity {
             Log.d("exception","NullPointerExceptionDB");
         }
         return result;
-    }
-
-    //Метод обновляет RecycleView
-    public void updateListOfRecentCalls(){
-        this.recentCallsList.clear();
-        this.recentCallsList.addAll(getListOfRecentCalls());
     }
 
     //Menu
