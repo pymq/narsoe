@@ -7,7 +7,7 @@
     <string name="seacth_input_hint">Phone Number</string>
     <string name="button_search_label">Search</string>
     <string name="setting_switch_define_incoming_call">Define incoming call</string>
-    <string name="setting_switch_show_modal_window">Show modal window upper than other</string>
+    <string name="setting_switch_show_modal_window">Close modal window when call apply</string>
     <string name="setting_plain_text_hint">ADD_SOME_DOMAIN_INFO</string>
     <string name="info_caller_phone">Phone number</string>
     <string name="info_block_info_header">Some information</string>

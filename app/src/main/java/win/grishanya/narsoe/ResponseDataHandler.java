@@ -22,7 +22,6 @@ public class ResponseDataHandler {
                 }
 
                 result = addStringIfNotEmpty(result,response.body().getName(),"Name ",true);
-                result = addStringIfNotEmpty(result,response.body().getBadge(),"Badge ",true);
                 result = addStringIfNotEmpty(result,response.body().getRating(),"Rating ",true);
                 result = addStringIfNotEmpty(result,response.body().getType(),"Type ",true);
 
@@ -56,7 +55,6 @@ public class ResponseDataHandler {
                 }
 
                 result = addStringIfNotEmpty(result,response.body().getName(),"Name ",true);
-                result = addStringIfNotEmpty(result,response.body().getBadge(),"Badge ",true);
                 result = addStringIfNotEmpty(result,response.body().getRating(),"Rating ",true);
                 result = addStringIfNotEmpty(result,response.body().getType(),"Type ",true);
                 result = addStringIfNotEmpty(result,response.body().getRegion(),"Region ",true);

@@ -18,6 +18,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ru.tinkoff.decoro.FormattedTextChangeListener;
 import ru.tinkoff.decoro.MaskImpl;
 import ru.tinkoff.decoro.slots.PredefinedSlots;
@@ -136,28 +139,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void checkPermissions(){
+        List<String> listOfNecessaryPermission = new ArrayList<String>();
 
         if (checkSelfPermission(android.Manifest.permission.READ_CALL_LOG)
-        == PackageManager.PERMISSION_GRANTED) {
-
-        } else {
-            //запрашиваем разрешение
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_CALL_LOG}, 1);
+        != PackageManager.PERMISSION_GRANTED) {
+            listOfNecessaryPermission.add(Manifest.permission.READ_CALL_LOG);
         }
 
         if (checkSelfPermission(android.Manifest.permission.READ_PHONE_STATE)
-                == PackageManager.PERMISSION_GRANTED) {
-                //ToDO Добавить какое-нибудь сообщение
-        } else {
-            //запрашиваем разрешение
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
+                != PackageManager.PERMISSION_GRANTED) {
+            listOfNecessaryPermission.add(Manifest.permission.READ_PHONE_STATE);
+        }
+
+        if(!listOfNecessaryPermission.isEmpty()){
+            String [] arrayOfNecessaryPermission = new String[listOfNecessaryPermission.size()];
+            listOfNecessaryPermission.toArray(arrayOfNecessaryPermission);
+            ActivityCompat.requestPermissions(MainActivity.this, arrayOfNecessaryPermission, 1);
         }
             //ToDO Возможно для этого не надо. Чекнуть!
         if (checkSelfPermission(android.Manifest.permission.SYSTEM_ALERT_WINDOW)
-                == PackageManager.PERMISSION_GRANTED) {
-            //ToDO Добавить какое-нибудь сообщение
-        } else {
-            //запрашиваем разрешение
+                != PackageManager.PERMISSION_GRANTED) {
             checkDrawOverlayPermission();
         }
     }

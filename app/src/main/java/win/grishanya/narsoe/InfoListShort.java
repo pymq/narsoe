@@ -19,9 +19,6 @@ public class InfoListShort {
     @SerializedName("Region")
     @Expose
     private String region;
-    @SerializedName("Badge")
-    @Expose
-    private String badge;
     @SerializedName("Comments")
     @Expose
     private List<String> comments = null;
@@ -59,14 +56,6 @@ public class InfoListShort {
 
     public void setRegion(String region) {
         this.region = region;
-    }
-
-    public String getBadge() {
-        return badge;
-    }
-
-    public void setBadge(String badge) {
-        this.badge = badge;
     }
 
     public List<String> getComments() {

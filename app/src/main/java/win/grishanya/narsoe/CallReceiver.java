@@ -32,13 +32,16 @@ import win.grishanya.narsoe.network.RetrofitInstance;
 public class CallReceiver extends BroadcastReceiver {
     private static Boolean incomingCall = false;
     private static WindowManager windowManager;
+    private static SharedPreferences myPreferences;
     private static ViewGroup windowLayout;
 
     @Override
     public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+         myPreferences
+                = PreferenceManager.getDefaultSharedPreferences(context);
 
-            if (action !=null) {
+            if (action !=null && myPreferences.getBoolean("defineIncomingCalls",false)) {
                 if (action.equals("android.intent.action.PHONE_STATE")) {
                     String phoneState = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
                     if (phoneState.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
@@ -47,19 +50,16 @@ public class CallReceiver extends BroadcastReceiver {
                         String phoneNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
                         incomingCall = true;
                         Log.d("info", "Show window: " + phoneNumber);
-                        SharedPreferences myPreferences
-                                = PreferenceManager.getDefaultSharedPreferences(context);
-                        int modalWindowPosition = myPreferences.getInt("modalWindowPosition", 0);
-                        showWindow(context, phoneNumber, modalWindowPosition);
+                        showWindow(context, phoneNumber);
 
-                    } else if (phoneState.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
+                    } else if (phoneState.equals(TelephonyManager.EXTRA_STATE_OFFHOOK) && myPreferences.getBoolean("closeModalWindowWhenCallApply",false)) {
                         //Телефон находится в режиме звонка (набор номера при исходящем звонке / разговор)
                         Log.i("info", "EXTRA_STATE_OFFHOOK");
-//                        if (incomingCall) {
-//                            Log.d("info", "Close window.");
-//                            incomingCall = false;
-//                            closeWindow();
-//                        }
+                        if (incomingCall) {
+                            Log.d("info", "Close window.");
+                            incomingCall = false;
+                            closeWindow();
+                        }
                     } else if (phoneState.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
                         //Телефон находится в ждущем режиме - это событие наступает по окончанию разговора
                         //или в ситуации "отказался поднимать трубку и сбросил звонок".
@@ -74,7 +74,10 @@ public class CallReceiver extends BroadcastReceiver {
             }
         }
 
-    public void showWindow(final Context context, String phone, int modalWindowPosition) {
+    public void showWindow(final Context context, String phone) {
+        int modalWindowPosition = myPreferences.getInt("modalWindowPosition", 0);
+
+
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         //ToDO добавить TYPE_SYSTEM_ALERT для api 23
@@ -91,7 +94,7 @@ public class CallReceiver extends BroadcastReceiver {
         params.y = modalWindowPosition;
         windowLayout = (ViewGroup) layoutInflater.inflate(R.layout.call_info, null);
         windowLayout.setBackgroundResource(R.color.colorBackGroundInfo);
-        windowLayout.setId(View.generateViewId());
+
         TextView textViewNumber=(TextView) windowLayout.findViewById(R.id.textViewNumber);
         Button buttonClose=(Button) windowLayout.findViewById(R.id.buttonClose);
         textViewNumber.setText(phone);
