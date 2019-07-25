@@ -27,6 +27,7 @@ import retrofit2.Response;
 import win.grishanya.narsoe.activity.MainActivity;
 import win.grishanya.narsoe.activity.SettingsActivity;
 import win.grishanya.narsoe.network.GetShortInformation;
+import win.grishanya.narsoe.network.PhoneNumberHandler;
 import win.grishanya.narsoe.network.RetrofitInstance;
 
 public class CallReceiver extends BroadcastReceiver {
@@ -41,7 +42,7 @@ public class CallReceiver extends BroadcastReceiver {
          myPreferences
                 = PreferenceManager.getDefaultSharedPreferences(context);
 
-            if (action !=null && myPreferences.getBoolean("defineIncomingCalls",false)) {
+            if (action !=null && myPreferences.getBoolean("defineIncomingCalls",true)) {
                 if (action.equals("android.intent.action.PHONE_STATE")) {
                     String phoneState = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
                     if (phoneState.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
@@ -49,10 +50,13 @@ public class CallReceiver extends BroadcastReceiver {
                         //Трубка не поднята, телефон звонит
                         String phoneNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
                         incomingCall = true;
-                        Log.d("info", "Show window: " + phoneNumber);
+
+                        PhoneNumberHandler phoneNumberHandler = new PhoneNumberHandler();
+                        phoneNumber = phoneNumberHandler.prettifyPhoneNumber(phoneNumber);
+
                         showWindow(context, phoneNumber);
 
-                    } else if (phoneState.equals(TelephonyManager.EXTRA_STATE_OFFHOOK) && myPreferences.getBoolean("closeModalWindowWhenCallApply",false)) {
+                    } else if (phoneState.equals(TelephonyManager.EXTRA_STATE_OFFHOOK) && myPreferences.getBoolean("closeModalWindowWhenCallApply",true)) {
                         //Телефон находится в режиме звонка (набор номера при исходящем звонке / разговор)
                         Log.i("info", "EXTRA_STATE_OFFHOOK");
                         if (incomingCall) {

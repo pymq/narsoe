@@ -50,6 +50,7 @@ public class ResponseDataHandler {
                     result = addStringIfNotEmpty(result,response.body().getCompany().getCity(),"Company city ",true);
                     result = addStringIfNotEmpty(result,response.body().getCompany().getUrl(),"Company URL ",true);
                     result = addStringIfNotEmpty(result,response.body().getCompany().getTelephone(),"Company Telephone ",true);
+                    result = addStringIfNotEmpty(result,response.body().getCompany().getAddress(),"Company Address ",true);
                     result = addStringIfNotEmpty(result,response.body().getCompany().getEmail(),"Company Email ",true);
                     result += "\n";
                 }

@@ -19,6 +19,9 @@ public class InfoListShort_Company {
     @SerializedName("Url")
     @Expose
     private List<String> url = null;
+    @SerializedName("Address")
+    @Expose
+    private String address = null;
     @SerializedName("Telephone")
     @Expose
     private String telephone;
@@ -56,6 +59,14 @@ public class InfoListShort_Company {
 
     public void setUrl(List<String> url) {
         this.url = url;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getTelephone() {

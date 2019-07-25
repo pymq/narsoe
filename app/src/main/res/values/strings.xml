@@ -12,6 +12,8 @@
     <string name="info_caller_phone">Phone number</string>
     <string name="info_block_info_header">Some information</string>
     <string name="bad_request">Oooh… Something went wrong</string>
+    <string name="call_info_number_example">555–555–555</string>
+    <string name="call_info_info_example">Name SomeName \nRating SomeNumber \nType SomeType</string>
     <string name="setting_modal_window_position">Modal window position</string>
     <string name="recentCallsActivityNumberCopied">Number copied</string>
 </resources>

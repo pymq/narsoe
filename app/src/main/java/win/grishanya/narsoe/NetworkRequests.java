@@ -5,6 +5,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import win.grishanya.narsoe.network.GetShortInformation;
+import win.grishanya.narsoe.network.PhoneNumberHandler;
 import win.grishanya.narsoe.network.RetrofitInstance;
 
 public class NetworkRequests {
@@ -17,9 +18,11 @@ public class NetworkRequests {
 
 
     public static void MakeResponse(String number,final MakeResponseCallbacks makeResponseCallbacks){
+        PhoneNumberHandler phoneNumberHandler = new PhoneNumberHandler();
+        number = phoneNumberHandler.validatePhoneNumber(number);
+
         GetShortInformation service = RetrofitInstance.getRetrofitInstance().create(GetShortInformation.class);
         Call<InfoListShort> call = service.getData(number);
-
         call.enqueue(new Callback<InfoListShort>() {
             @Override
             public void onResponse(Call<InfoListShort> call, Response<InfoListShort> response) {

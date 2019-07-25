@@ -28,6 +28,7 @@ import win.grishanya.narsoe.Calls;
 import win.grishanya.narsoe.NetworkRequests;
 import win.grishanya.narsoe.R;
 import win.grishanya.narsoe.RecentCallsRecycleViewAdapter;
+import win.grishanya.narsoe.network.PhoneNumberHandler;
 
 public class RecentCallsActivity extends AppCompatActivity {
     private BottomNavigationView navigation;
@@ -119,6 +120,8 @@ public class RecentCallsActivity extends AppCompatActivity {
 
     //Метод отдает список всех звонков
     public ArrayList<Calls> getListOfRecentCalls(){
+        PhoneNumberHandler phoneNumberHandler = new PhoneNumberHandler();
+
         ArrayList<Calls> result = new ArrayList<Calls>();
         Cursor listOfRecentCalls = getContentResolver().query(
                 CallLog.Calls.CONTENT_URI,
@@ -132,7 +135,7 @@ public class RecentCallsActivity extends AppCompatActivity {
                 do {
                     Calls calls = new Calls();
                     calls._id = listOfRecentCalls.getInt(listOfRecentCalls.getColumnIndex(CallLog.Calls._ID));
-                    calls.number = listOfRecentCalls.getString(listOfRecentCalls.getColumnIndex(CallLog.Calls.NUMBER));
+                    calls.number = phoneNumberHandler.prettifyPhoneNumber(listOfRecentCalls.getString(listOfRecentCalls.getColumnIndex(CallLog.Calls.NUMBER)));
                     long timeStamp = listOfRecentCalls.getLong(listOfRecentCalls.getColumnIndex(CallLog.Calls.DATE));
                     calls.date = new Date(timeStamp);
                     String name = listOfRecentCalls.getString(listOfRecentCalls.getColumnIndex(CallLog.Calls.CACHED_NAME));

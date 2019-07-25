@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private Button searchButton;
     private EditText phoneNumberEditText;
     private BottomNavigationView navigation;
-
+    private static int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE= 5469;
     //Navigation view
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -154,12 +155,18 @@ public class MainActivity extends AppCompatActivity {
         if(!listOfNecessaryPermission.isEmpty()){
             String [] arrayOfNecessaryPermission = new String[listOfNecessaryPermission.size()];
             listOfNecessaryPermission.toArray(arrayOfNecessaryPermission);
-            ActivityCompat.requestPermissions(MainActivity.this, arrayOfNecessaryPermission, 1);
+            ActivityCompat.requestPermissions(this, arrayOfNecessaryPermission, 1);
         }
-            //ToDO Возможно для этого не надо. Чекнуть!
-        if (checkSelfPermission(android.Manifest.permission.SYSTEM_ALERT_WINDOW)
-                != PackageManager.PERMISSION_GRANTED) {
-            checkDrawOverlayPermission();
+
+        checkDrawOverlayPermission();
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+            checkPermissions();
         }
     }
 
@@ -173,7 +180,17 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:" + getPackageName()));
                 /** request permission via start activity for result */
-                startActivity(intent);
+                startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode != ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE){
+            if (!Settings.canDrawOverlays(this)) {
+                checkDrawOverlayPermission();
             }
         }
     }

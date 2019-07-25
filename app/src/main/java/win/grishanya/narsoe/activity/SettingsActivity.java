@@ -97,8 +97,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void showSaveSettings (){
-        defineIncomingCalls.setChecked(myPreferences.getBoolean("defineIncomingCalls",false));
-        closeModalWindowWhenCallApply.setChecked(myPreferences.getBoolean("closeModalWindowWhenCallApply",false));
+        defineIncomingCalls.setChecked(myPreferences.getBoolean("defineIncomingCalls",true));
+        closeModalWindowWhenCallApply.setChecked(myPreferences.getBoolean("closeModalWindowWhenCallApply",true));
         modalWindowPosition.setProgress((myPreferences.getInt("modalWindowPosition",0)*100)/getUserScreenHeight());
     }
 

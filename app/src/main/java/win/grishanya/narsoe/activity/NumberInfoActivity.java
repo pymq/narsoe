@@ -13,6 +13,7 @@ import android.widget.TextView;
 import win.grishanya.narsoe.NetworkRequests;
 import win.grishanya.narsoe.R;
 import win.grishanya.narsoe.ResponseDataHandler;
+import win.grishanya.narsoe.network.PhoneNumberHandler;
 
 public class NumberInfoActivity extends AppCompatActivity {
 
@@ -26,6 +27,8 @@ public class NumberInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_number_info);
 
+        PhoneNumberHandler phoneNumberHandler = new PhoneNumberHandler();
+
         phoneNumberTextView = (TextView) findViewById(R.id.numberInfoPhoneNumberTextView);
         informationTextView = (TextView) findViewById(R.id.numberInfoFullINformationTextView);
         downloadProgressBar = (ProgressBar) findViewById(R.id.numberInfoProgressBar);
@@ -33,7 +36,7 @@ public class NumberInfoActivity extends AppCompatActivity {
         informationTextView.setMovementMethod(new ScrollingMovementMethod());
 
         Intent intent = getIntent();
-        phoneNumber = intent.getStringExtra("phoneNumber");
+        phoneNumber = phoneNumberHandler.prettifyPhoneNumber(intent.getStringExtra("phoneNumber"));
         phoneNumberTextView.setText(phoneNumber);
         ShowNumberInfo(phoneNumber);
     }
