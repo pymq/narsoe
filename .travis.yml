@@ -56,6 +56,7 @@ deploy:
     (commit $TRAVIS_COMMIT) built by Travis CI on $(date +'%F %T %Z').
   #draft: true
   overwrite: true #
+  prerelease: true #
   target_commitish: $TRAVIS_COMMIT #
   on:
     #tags: true
