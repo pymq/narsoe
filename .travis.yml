@@ -53,22 +53,21 @@ branches:
     - /^travis-.*-build$/
 
 before_script:
-  - echo yes | ${ANDROID_HOME}tools/bin/sdkmanager "tools"
-  - echo yes | ${ANDROID_HOME}tools/bin/sdkmanager "platform-tools"
-  - echo yes | ${ANDROID_HOME}tools/bin/sdkmanager "build-tools;28.0.3"
-  - echo yes | ${ANDROID_HOME}tools/bin/sdkmanager "platforms;android-28"
+  - echo yes | sdkmanager "tools"
+  - echo yes | sdkmanager "platform-tools"
+  - echo yes | sdkmanager "build-tools;$ANDROID_BUILD_TOOLS"
+  - echo yes | sdkmanager "platforms;android-$ANDROID_API"
 #  - yes | sdkmanager --licenses
 
 script: ./gradlew assembleDebug
 
 before_deploy:
   - ln -s app/build/outputs/apk/debug/app-debug.apk narsoe-${TAG}-build.apk
-  - git tag -f travis-${TAG}-build
-  - git remote add gh
-    https://${OWNER}:${GITHUB_API_KEY}@github.com/${TRAVIS_REPO_SLUG}.git
-  - git push gh :travis-${TAG}-build || true
-  - git push -f gh travis-${TAG}-build
-  - git remote remove gh
+#  - git tag -f travis-${TAG}-build
+#  - git remote add gh_origin https://${OWNER}:${GITHUB_API_KEY}@github.com/${TRAVIS_REPO_SLUG}.git
+#  - git push gh_origin :travis-${TAG}-build || true
+#  - git push -f gh_origin travis-${TAG}-build
+#  - git remote remove gh_origin
 
 
 deploy:
