@@ -11,6 +11,8 @@ env:
     - BRANCH=${TRAVIS_BRANCH/master/}
     - TAG=${DEV}${BRANCH:+_}${BRANCH}
 
+before_install:
+  - chmod +x gradlew
 
 android:
   components:
