@@ -51,7 +51,7 @@ deploy:
   api_key: $GITHUB_API_KEY
   file: narsoe-${TAG}-build.apk
   skip_cleanup: true
-  name: narsoe development build (${TRAVIS_BRANCH})
+  name: narsoe ${TAG} build (${TRAVIS_BRANCH})
   body: Automatic narsoe development build of $TRAVIS_BRANCH branch
     (commit $TRAVIS_COMMIT) built by Travis CI on $(date +'%F %T %Z').
   #draft: true
