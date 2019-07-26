@@ -29,10 +29,10 @@ branches:
     - /^travis-.*-build$/
 
 before_script:
-  - echo yes | sdkmanager "tools"
-  - echo yes | sdkmanager "platform-tools"
-  - echo yes | sdkmanager "build-tools;$ANDROID_BUILD_TOOLS"
-  - echo yes | sdkmanager "platforms;android-$ANDROID_API"
+  - yes | sdkmanager "tools"
+  - yes | sdkmanager "platform-tools"
+  - yes | sdkmanager "build-tools;$ANDROID_BUILD_TOOLS"
+  - yes | sdkmanager "platforms;android-$ANDROID_API"
 #  - yes | sdkmanager --licenses
 
 script: ./gradlew assembleDebug
