@@ -47,6 +47,9 @@ branches:
   except:
     - /^travis-.*-build$/
 
+before_script:
+  - yes | sdkmanager --licenses
+
 script: ./gradlew assembleDebug
 
 before_deploy:
