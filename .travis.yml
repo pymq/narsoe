@@ -52,7 +52,11 @@ branches:
   except:
     - /^travis-.*-build$/
 
-#before_script:
+before_script:
+  - echo yes | ${ANDROID_HOME}tools/bin/sdkmanager "tools"
+  - echo yes | ${ANDROID_HOME}tools/bin/sdkmanager "platform-tools"
+  - echo yes | ${ANDROID_HOME}tools/bin/sdkmanager "build-tools;28.0.3"
+  - echo yes | ${ANDROID_HOME}tools/bin/sdkmanager "platforms;android-28"
 #  - yes | sdkmanager --licenses
 
 script: ./gradlew assembleDebug
