@@ -63,11 +63,11 @@ script: ./gradlew assembleDebug
 
 before_deploy:
   - ln -s app/build/outputs/apk/debug/app-debug.apk narsoe-${TAG}-build.apk
-#  - git tag -f travis-${TAG}-build
-#  - git remote add gh_origin https://${OWNER}:${GITHUB_API_KEY}@github.com/${TRAVIS_REPO_SLUG}.git
-#  - git push gh_origin :travis-${TAG}-build || true
-#  - git push -f gh_origin travis-${TAG}-build
-#  - git remote remove gh_origin
+  - git tag -f travis-${TAG}-build
+  - git remote add gh_origin https://${GITHUB_API_KEY}@github.com/${TRAVIS_REPO_SLUG}.git
+  - git push gh_origin :travis-${TAG}-build || true
+  - git push -f gh_origin travis-${TAG}-build
+  - git remote remove gh_origin
 
 
 deploy:
@@ -86,3 +86,11 @@ deploy:
     tags: false #
     all_branches: true #
 
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.android/build-cache
