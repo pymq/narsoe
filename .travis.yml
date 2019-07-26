@@ -53,7 +53,7 @@ deploy:
   skip_cleanup: true
   name: narsoe development build (${TRAVIS_BRANCH})
   body: Automatic narsoe development build of $TRAVIS_BRANCH branch
-    (commit $TRAVIS_COMMIT) built by Travis CI on $(date +'%F %T %Z').
+    (commit $TRAVIS_COMMIT) built by Travis CI on $(TZ="UTC-3" date +'%F %T %Z').
   #draft: true
   overwrite: true #
   target_commitish: $TRAVIS_COMMIT #
